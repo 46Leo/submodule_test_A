@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SubmoduleTest", "SubmoduleTest.vcxproj", "{42EB2B34-2508-4743-95B9-B98ADF51D97F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{79DFFDCF-2A2E-4E9D-BFE1-04A16D9ACBA0} = {79DFFDCF-2A2E-4E9D-BFE1-04A16D9ACBA0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProjectCreatedFromRepoA", "..\submodule_test_B\ProjectCreatedFromRepoA\ProjectCreatedFromRepoA.vcxproj", "{79DFFDCF-2A2E-4E9D-BFE1-04A16D9ACBA0}"
 EndProject
