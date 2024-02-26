@@ -37,6 +37,12 @@ Esempio:
     remotes/origin/main
   ```
 
+## Checkout
+Se voglio "tornare indietro" nel repository principale facendo il `checkout` ad un commit o branch specifico, potrei aver bisogno di spostarmi anche nei suoi sottomoduli. Questo non viene fatto automaticamente ma serve il comando:
+
+> git submodule update
+
+[link](https://www.vogella.com/tutorials/GitSubmodules/article.html)
 
 ## Note
 **ATTENZIONE**:  
