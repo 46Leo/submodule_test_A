@@ -44,6 +44,10 @@ Se voglio "tornare indietro" nel repository principale facendo il `checkout` ad 
 
 [link](https://www.vogella.com/tutorials/GitSubmodules/article.html)
 
+Di default, Git non aggiorna i sottomoduli quando ci si sposta nel repo principale.  
+Per eseguire un `pull` o un `checkout` in modo che anche i submodules siano sincronizzati, aggiungere l'opzione **`--recurse-submodules`** oppure [configurare Git]((https://stackoverflow.com/questions/1899792/why-is-git-submodule-not-updated-automatically-on-git-checkout)) in modo che sia il comportamento predefinito:
+> `$ git config --global submodule.recurse true` 
+
 ## Note
 **ATTENZIONE**:  
 Con i nostri progetti che hanno come output una .dll, l'unica accortezza da avere è che la cartella di output delle .dll è la stessa per tutta la _solution_, quindi se un repo ha più sottomoduli che dipendono a loro volta da altri repo (sottomoduli dei sottomoduli), questi dovranno essere manualmente allineati **TUTTI** alla stessa versione/commit per evitare incompatibilità, dato che quando viene compilato il repo `B` (per 3 volte, essendo sottomodulo di `A`, `C` e `D`) verrà tenuta solo la .dll dell'ultimo che è stato compilato!
