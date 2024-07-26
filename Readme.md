@@ -9,6 +9,7 @@ A
 ```
 
 ## Info
+Per aggiungere un sottomodulo ad un repository git, usare il comando: `git submodule add <URL>`. (Tutorial e info aggiuntive [qui](https://git-scm.com/book/it/v2/Git-Tools-Submodules) e [qui](https://www.atlassian.com/it/git/tutorials/git-submodule)).  
 Se inserisco sottomoduli in un repo, il comportamento di VS è il seguente (con riferimento ad `A`):
 * scarica automaticamente tutti i sottomoduli del repo A in maniera ricorsiva. Git `git clone`, di default, non lo fa; serve l'opzione **`--recurse-submodules`**.
 * non ne traccia le modifiche e non viene neppure visualizzato che esistono dei sottomoduli a meno che non esista un progetto di VS all'interno del submodule e che questo progetto sia incluso nella solution del repo principale! A questo punto i submodules vengono rilevati e tracciati.
@@ -38,7 +39,7 @@ Esempio:
   ```
 
 ## Checkout
-Se voglio "tornare indietro" nel repository principale facendo il `checkout` ad un commit o branch specifico, potrei aver bisogno di spostarmi anche nei suoi sottomoduli. Questo non viene fatto automaticamente ma serve il comando:
+Se voglio "tornare indietro" nel repository principale facendo il `checkout` ad un commit o branch specifico, potrei aver bisogno di spostarmi anche nei suoi sottomoduli. Questo **non** viene fatto automaticamente ma serve il comando:
 
 > git submodule update --init --recursive
 
@@ -50,4 +51,4 @@ Per eseguire un `pull` o un `checkout` in modo che anche i submodules siano sinc
 
 ## Note
 **ATTENZIONE**:  
-Con i nostri progetti che hanno come output una .dll, l'unica accortezza da avere è che la cartella di output delle .dll è la stessa per tutta la _solution_, quindi se un repo ha più sottomoduli che dipendono a loro volta da altri repo (sottomoduli dei sottomoduli), questi dovranno essere manualmente allineati **TUTTI** alla stessa versione/commit per evitare incompatibilità, dato che quando viene compilato il repo `B` (per 3 volte, essendo sottomodulo di `A`, `C` e `D`) verrà tenuta solo la .dll dell'ultimo che è stato compilato!
+Con i nostri progetti che hanno come output una `.dll`, l'unica accortezza da avere è che la cartella di output delle .dll è la stessa per tutta la _solution_, quindi se un repo ha più sottomoduli che dipendono a loro volta da altri repo (sottomoduli dei sottomoduli), questi dovranno essere manualmente allineati **TUTTI** alla stessa versione/commit per evitare incompatibilità, dato che quando viene compilato il repo `B` (per 3 volte, essendo sottomodulo di `A`, `C` e `D`) verrà tenuta solo la .dll dell'ultimo che è stato compilato! È quindi fondamentale che tutti i repo `B` puntino allo stesso commit.
