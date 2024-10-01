@@ -49,6 +49,24 @@ Di default, Git non aggiorna i sottomoduli quando ci si sposta nel repo principa
 Per eseguire un `pull` o un `checkout` in modo che anche i submodules siano sincronizzati, aggiungere l'opzione **`--recurse-submodules`** oppure [configurare Git]((https://stackoverflow.com/questions/1899792/why-is-git-submodule-not-updated-automatically-on-git-checkout)) in modo che sia il comportamento predefinito:
 > `$ git config --global submodule.recurse true` 
 
+Un altro caso particolare è quando un submodule non è presente in un branch ma lo è in un altro. Potrebbe non venire scaricato, è utile allora il comando:
+> git submodule update --remote
+
+## Rimuovere un submodule:
+per rimuovere completamente un submodule ([link](https://stackoverflow.com/questions/1260748/how-do-i-remove-a-submodule/36593218#36593218)):
+```
+# Remove the submodule entry from .git/config
+git submodule deinit -f path/to/submodule
+
+# Remove the submodule directory from the superproject's .git/modules directory
+rm -rf .git/modules/path/to/submodule
+
+# Remove the entry in .gitmodules and remove the submodule directory located at path/to/submodule
+git rm -f path/to/submodule
+```
+
 ## Note
 **ATTENZIONE**:  
 Con i nostri progetti che hanno come output una `.dll`, l'unica accortezza da avere è che la cartella di output delle .dll è la stessa per tutta la _solution_, quindi se un repo ha più sottomoduli che dipendono a loro volta da altri repo (sottomoduli dei sottomoduli), questi dovranno essere manualmente allineati **TUTTI** alla stessa versione/commit per evitare incompatibilità, dato che quando viene compilato il repo `B` (per 3 volte, essendo sottomodulo di `A`, `C` e `D`) verrà tenuta solo la .dll dell'ultimo che è stato compilato! È quindi fondamentale che tutti i repo `B` puntino allo stesso commit.
+
+Ogni modulo (repo) deve clonare i sottomoduli al suo stesso livello di directory (che sarà dentro la cartella più esterna della solution) e fare riferimento da VS con path relativi.
