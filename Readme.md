@@ -131,7 +131,7 @@ Usare un post-merge hook per risolvere... [link](https://www.reddit.com/r/git/co
 
 ### hook post merge
 Per automatizzare l'aggiornamento dei sottomoduli dopo un merge, è utile creare un hook globale da eseguire automaticamente dopo un merge.  
-Vedere [istruzioni](https://coderwall.com/p/jp7d5q/create-a-global-git-commit-hook), [problema](https://www.reddit.com/r/git/comments/170la7k/why_isnt_my_submodule_uptodate_after_a_merge/) ed [esempio di hhok-file](https://gist.github.com/ejmr/453edc19dd596e472e90).  
+Vedere [istruzioni](https://coderwall.com/p/jp7d5q/create-a-global-git-commit-hook), [problema](https://www.reddit.com/r/git/comments/170la7k/why_isnt_my_submodule_uptodate_after_a_merge/) ed [esempio di hook-file](https://gist.github.com/ejmr/453edc19dd596e472e90).  
 
 **Istruzioni**
 * abilitare globalmente i template e crearne uno per il post-merge:
