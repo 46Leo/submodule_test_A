@@ -1,4 +1,21 @@
-## Gerartchia repo e submodules:
+# tutorial sottomoduli git
+
+- [tutorial sottomoduli git](#tutorial-sottomoduli-git)
+  - [gerartchia repo e submodules:](#gerartchia-repo-e-submodules)
+  - [aggiungere sottomoduli](#aggiungere-sottomoduli)
+  - [clonare repository che contengono sottomoduli](#clonare-repository-che-contengono-sottomoduli)
+  - [checkout](#checkout)
+  - [configurare git globalmente](#configurare-git-globalmente)
+  - [merge](#merge)
+    - [hook post merge](#hook-post-merge)
+      - [esempio](#esempio)
+        - [senza Hook](#senza-hook)
+        - [con hook](#con-hook)
+  - [rimuovere un sottomodulo:](#rimuovere-un-sottomodulo)
+  - [note](#note)
+
+
+## gerartchia repo e submodules:
 Si usa la seguente gerarchia come esempio di sottomoduli.  
 ```
 A
@@ -6,12 +23,13 @@ A
 ├─ C
 │  └─ B
 └─ D
-   └─ B
+   ├─ B
+   └─ E
 ```
 Fare attenzione con i submoduli: **se il submodulo A dipende dal submodulo C e il submodulo C dipende dal submodulo B**, e si deve apportare qualche modifica al codice di tutti, prima aggiornare B e fare il commit. Poi, eseguire il pull del commit di B da C, aggiornare il codice in C e fare il commit di C (il commit aggiornerà anche il riferimento all'attuale commit di B). Infine, eseguire il pull del commit di C da A (in questo modo, B è già aggiornato nell'ultimo commit di C), aggiornare il codice di A e fare il commit (il commit conterrà i riferimenti aggiornati di tutti gli altri repository).
 
 
-## Aggiungere sottomoduli
+## aggiungere sottomoduli
 Per aggiungere un sottomodulo ad un repository git, usare il comando: 
 > `$ git submodule add <URL>`
 
@@ -45,10 +63,10 @@ Esempio:
     remotes/origin/main
   ```
 
-## Clonare repository che contengono sottomoduli
+## clonare repository che contengono sottomoduli
 Di default, `git clone` NON scarica i sottomoduli. È **sempre** necessario aggiungere l'opzione **`--recurse-submodules`** al comando di clone, anche se sono globalmente impostati i parametri `submodule.recurse` e `submodule.stickyRecursiveClone` ([link](https://stackoverflow.com/questions/70249838/git-setting-submodule-recurse-is-not-working-git-bash)).  
 
-## Checkout
+## checkout
 Anche per il `checkout` tra commit e branch nel repository principale git **non** aggiorna automaticamente i sottomoduli, serve il comando:
 > `$ git submodule update --init --recursive`
 
@@ -56,7 +74,7 @@ Anche per il `checkout` tra commit e branch nel repository principale git **non*
 
 Oppure, per eseguire un `pull` o un `checkout` in modo che anche i submodules siano sincronizzati, aggiungere l'opzione **`--recurse-submodules`** al comando.
 
-## Configurare GIT globalmente
+## configurare git globalmente
 La soluzione (forse) migliore è [configurare Git globalmente]((https://stackoverflow.com/questions/1899792/why-is-git-submodule-not-updated-automatically-on-git-checkout)) in modo che l'update automatico dei sottomoduli sia il comportamento predefinito:
 > `$ git config --global submodule.recurse true` 
 
@@ -104,14 +122,14 @@ Spiegazione di chatgpt:
 Un altro caso particolare è quando un submodule non è presente in un branch ma lo è in un altro. Potrebbe non venire scaricato, è utile allora il comando (da verificare se serve questo o se va bene `git submodule update --init --recursive`):
 > `$ git submodule update --remote`
 
-## Merge
+## merge
 Quando si fa il merge di un branch linkato ad una versione diversa di un submodule, per aggiornare anche il branch attuale (dove viene fatto il merge) bisogna sempre dare il comando
 > `$ git submodule update --init --recursive` 
 
 Altrimenti, git di default non sposta il sottomodulo ma lo manitiene alla versione attuale, notificando che però è necessario un commit per riportare il sottomodulo alla versione attuale in seguito al merge ([link](https://www.reddit.com/r/git/comments/170la7k/why_isnt_my_submodule_uptodate_after_a_merge/)).
 Usare un post-merge hook per risolvere... [link](https://www.reddit.com/r/git/comments/170la7k/why_isnt_my_submodule_uptodate_after_a_merge/), [link](https://gist.github.com/ejmr/453edc19dd596e472e90)
 
-### Hook post merge
+### hook post merge
 Per automatizzare l'aggiornamento dei sottomoduli dopo un merge, è utile creare un hook globale da eseguire automaticamente dopo un merge.  
 Vedere [istruzioni](https://coderwall.com/p/jp7d5q/create-a-global-git-commit-hook), [problema](https://www.reddit.com/r/git/comments/170la7k/why_isnt_my_submodule_uptodate_after_a_merge/) ed [esempio di hhok-file](https://gist.github.com/ejmr/453edc19dd596e472e90).  
 
@@ -131,10 +149,10 @@ Vedere [istruzioni](https://coderwall.com/p/jp7d5q/create-a-global-git-commit-ho
 
 Se la procedura è stata eseguita correttamente, essendo un parametro globale, ogni nuovo repository che verrà clonato con `git clone` conterrà automaticamente lo script di hook `post-merge` senza bisogno di ulteriori comandi.
 
-#### Esempio
+#### esempio
 Questo esempio mostra cosa succede inizialmente, senza l'hook, e dopo averlo applicato.
 
-##### Senza Hook
+##### senza Hook
 Inizialmente, il repository A e B (che è sottomodulo di A) si trovano entrambi in `main`: 
 ![alt text](<Screenshot 2024-12-06 115817.png>)
 ![alt text](<Screenshot 2024-12-06 115907.png>)
@@ -160,7 +178,7 @@ Il sottomodulo si porta alla versione corretta e la notifica scompare.
 ![alt text](<Screenshot 2024-12-06 141214.png>)
 
 
-##### Con hook
+##### con hook
 Dopo aver generato correttamente l'hook e aver re-inizializzato il repository, nella cartella `.git/hooks/` troveremo un nuovo file `post-merge` con il nostro script.  
 A questo punto, l'operazione di merge aggiornerà automaticamente il sottomodulo senza bisogno di altri comandi. 
 ![alt text](<Screenshot 2024-12-06 143141.png>)
@@ -192,7 +210,7 @@ git submodule update --init --recursive
 echo "Submodules updated"
 ```
 
-## Rimuovere un sottomodulo:
+## rimuovere un sottomodulo:
 Per [rimuovere completamente un sottomodulo](https://stackoverflow.com/questions/1260748/how-do-i-remove-a-submodule/36593218#36593218):
 ```
 # Remove the submodule entry from .git/config
@@ -205,8 +223,15 @@ rm -rf .git/modules/path/to/submodule
 git rm -f path/to/submodule
 ```
 
-## Note
+## note
 **ATTENZIONE**:  
-Con i nostri progetti che hanno come output una `.dll`, l'unica accortezza da avere è che la cartella di output delle .dll è la stessa per tutta la _solution_, quindi se un repo ha più sottomoduli che dipendono a loro volta da altri repo (sottomoduli dei sottomoduli), questi dovranno essere manualmente allineati **TUTTI** alla stessa versione/commit per evitare incompatibilità, dato che quando viene compilato il repo `B` (per 3 volte, essendo sottomodulo di `A`, `C` e `D`) verrà tenuta solo la .dll dell'ultimo che è stato compilato! È quindi fondamentale che tutti i repo `B` puntino allo stesso commit.
+Per i nostri progetti che producono un .dll, l'unica precauzione da prendere è di ricordarsi che la cartella di output per le .dll è la stessa per tutta la solution!
+Pertanto, se un repository ha più submodules che a loro volta dipendono da altri repository (submodules annidati), questi devono essere allineati manualmente TUTTI alla stessa versione/commit per evitare conflitti a runtime!
 
-Ogni modulo (repo) può clonare i sottomoduli al suo stesso livello di directory (che sarà dentro la cartella più esterna della solution) e fare riferimento da VS con path relativi.
+Questo perché quando il repository B viene compilato interamente (se il progetto è incluso nella solution) o in parte (vengono inclusi direttamente alcuni suoi files), solo la .dll genrata dall'ultimo progetto compilato verrà mantenuta! È quindi obbligatorio che tutti i repository B puntino allo stesso commit.
+Inoltre, se un repository (D) ha una dipendenza di link da un sottomodulo (E), ovviamente VS non compilerà E a meno che non venga incluso manualmente nella solution (la solution di D include ovviamente E, ma la solution di A non può saperlo).
+Se ad un primo momento questa può sembrare una cosa complicata, in realtà in fase di build verrà generato un errore di link che permette di individuare la dipendenza e correggerla facilmente.
+È comunque utile perchè permette di individuare tutte e sole le dipendenze necessarie.
+
+**VERSIONAMENTO e COMMIT**
+Prestare attenzione con i sottomoduli: se il submodule A dipende dal submodule B e il submodule C dipende dal submodule B, e si devono fare alcune modifiche al codice di tutti questi moduli, aggiornare per primo B e fare il commit. Poi, fare il pull del modulo B dal modulo C, aggiornare il codice in C e fare il commit di C (il commit aggiornerà anche il riferimento all'attuale commit di B). Infine, fare il pull di C da A (in questo modo, B inerno a C sarà automaticamente aggiornato grazie al commit di C), fare attenzione a sincronizzare (se necessario) tutti i B alla stessa versione, aggiornare il codice di A e fare il commit di A, che conterrà quindi i riferimenti aggiornati di tutti gli altri repository a cascata.
