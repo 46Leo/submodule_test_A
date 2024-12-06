@@ -135,10 +135,10 @@ Vedere [istruzioni](https://coderwall.com/p/jp7d5q/create-a-global-git-commit-ho
 
 **Istruzioni**
 * abilitare globalmente i template e crearne uno per il post-merge:
-  > `$ git config --global init.templatedir '~/.git-templates'`
-  > `$ mkdir -p ~/.git-templates/hooks`
-  > `$ touch ~/.git-templates/hooks/post-merge`
-  > `$ chmod a+x ~/.git-templates/hooks/post-merge`
+  > `$ git config --global init.templatedir '~/.git-templates'`  
+  > `$ mkdir -p ~/.git-templates/hooks`  
+  > `$ touch ~/.git-templates/hooks/post-merge`  
+  > `$ chmod a+x ~/.git-templates/hooks/post-merge`  
 * aprire il file e inserire il seguente testo:  
   ```bash
   #!/bin/sh
