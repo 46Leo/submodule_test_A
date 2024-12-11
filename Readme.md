@@ -210,6 +210,25 @@ git submodule update --init --recursive
 echo "Submodules updated"
 ```
 
+----
+
+In alternativa, esiste anche il comando (non testato):
+> $ git config --global core.hooksPath /path/to/global/hooks  
+
+che definisce una cartella globale per gli hook che verrà usata da tutti i repository. In questo caso, i repository non eseguiranno più gli hook all'interno di .git/hooks ma solamente quelli della cartella globale.  
+Per eseguire _anche_ quelli locali, serve inserire del codice aggiuntivo negli script globali (da chatgpt):
+```bash
+#!/bin/bash
+
+# Esegui logica globale
+echo "Esecuzione dell'hook globale post-merge"
+
+# Se esiste un hook locale, eseguilo
+if [ -x "$(git rev-parse --git-dir)/hooks/post-merge-local" ]; then
+    "$(git rev-parse --git-dir)/hooks/post-merge-local"
+fi
+```
+
 ## rimuovere un sottomodulo:
 Per [rimuovere completamente un sottomodulo](https://stackoverflow.com/questions/1260748/how-do-i-remove-a-submodule/36593218#36593218):
 ```
