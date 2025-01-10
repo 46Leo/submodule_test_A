@@ -119,8 +119,11 @@ Spiegazione di chatgpt:
   >Se restituisce true, la configurazione è attiva.
 
 
-Un altro caso particolare è quando un submodule non è presente in un branch ma lo è in un altro. Potrebbe non venire scaricato, è utile allora il comando (da verificare se serve questo o se va bene `git submodule update --init --recursive`):
+Un altro caso particolare è quando un submodule non è presente in un branch ma lo è in un altro. Potrebbe non venire scaricato, <s>è utile allora il comando (da verificare se serve questo o se va bene `git submodule update --init --recursive`):
 > `$ git submodule update --remote`
+</s>
+
+NO, il cmd precedente aggiorna i sottomoduli al commit più recente del branch remoto tracciato attualmente!  
 
 ## merge
 **Problema**: quando si fa il merge in `main` (o altro branch) di un branch che è linkato ad una versione più recente di un submodule (supponiamo non ci siano conflitti tra le versioni del sottomodulo), git **non** aggiorna automaticamente il sottomodulo nel branch dove è stato fatto il merge, ma bisogna **sempre** dare il comando:  
