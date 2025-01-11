@@ -6,10 +6,11 @@
   - [clonare repository che contengono sottomoduli](#clonare-repository-che-contengono-sottomoduli)
   - [checkout](#checkout)
   - [configurare git globalmente](#configurare-git-globalmente)
-    - [Nuovo submodule nel repo remoto](#nuovo-submodule-nel-repo-remoto)
+    - [nuovo submodule nel repo remoto](#nuovo-submodule-nel-repo-remoto)
+      - [esempio](#esempio)
   - [merge](#merge)
     - [hook post merge](#hook-post-merge)
-      - [esempio](#esempio)
+      - [esempio](#esempio-1)
         - [senza Hook](#senza-hook)
         - [con hook](#con-hook)
   - [rimuovere un sottomodulo:](#rimuovere-un-sottomodulo)
@@ -119,20 +120,43 @@ Spiegazione di chatgpt:
   >git config --get submodule.stickyRecursiveClone
   >Se restituisce true, la configurazione è attiva.
 
-### Nuovo submodule nel repo remoto
-Un altro caso particolare è quando un submodule non è presente in un branch ma lo è in un altro o è stato aggiunto in un commit remoto che dobbiamo ancora "pullare" nel branch locale. Il sottomodulo NON viene automaticamente scaricato, <s>è utile allora il comando (da verificare se serve questo o se va bene `git submodule update --init --recursive`):
+### nuovo submodule nel repo remoto
+Un altro caso particolare si verifica quando nel repository remoto viene aggiunto un commit che contiene un nuovo submodule. Quando, in locale, si eseguirà il `pull` del commit remoto (o, se siamo in un branch differente, il checkout nel branch che contiene questo nuovo sottomodulo), il sottomodulo verrà aggiunto solo come "riferimento", ma **NON verrà automaticamente scaricato**!
+<s>È utile allora il comando (da verificare se serve questo o se va bene `git submodule update --init --recursive`):
 > `$ git submodule update --remote`
 </s>
 
-<span style="color:red">NO, il cmd precedente aggiorna i sottomoduli al commit più recente del branch remoto tracciato attualmente!</span>
+<span style="color:red"> NO, il cmd precedente aggiorna i sottomoduli al commit più recente del branch remoto tracciato attualmente!</span>
 
-Come nel caso di `clone`, anche qui è necessario eseguire manualmente il comando:
+Come nel [caso già esamitato](#clonare-repository-che-contengono-sottomoduli) in cui si clona un repository (comando `clone`), anche in questo caso git, per scelta, non scarica automaticamente i sottomoduli ma è necessario farlo manualmente con il comando:
 > `$ git submodule update --init --recursive`
+
+In alternativa al comando manuale, si può creare un hook `post_merge` come descritto nel capitolo [merge](#merge), che si occupa di scaricare automaticamente i nuovi submodules dopo un `pull`.
+
+Lo stesso problema si presenta anche se il submodule si trova in un branch differente, nuovo e presente solamente sul repo remoto, e vogliamo fare il `checkout` o `swicth` in questo nuovo branch. Anche in questo caso è possibile evitare di dover scaricare manualmente il sottomodulo creando un hook dal nome `post_checkout` che verrà eseguito automaticamente dopo un `checkout` o `swicth`.  
+L'hook sarà identico a quello per il merge, dovrà contenere solamente il comando:
+> `$ git submodule update --init --recursive`
+
+#### esempio
+Supponiamo di essere nella situazione iniziale seguente: vogliamo spostarci in un nuovo branch remoto (con nuovi sottomoduli).  
+![alt text](<Immagine 2025-01-11 211854.jpg>)
+
+Facendo lo `switch` sul nuovo branch, troveremo in locale le cartelle dei nuovi sottomoduli ma saranno vuote. Dovremo aggiornare manualmente i nuovi repository.
+![alt text](<Immagine 2025-01-11 212044.jpg>)
+
+![alt text](<Immagine 2025-01-11 212448.jpg>)
+
+Se invece creiamo un nuovo script `post_checkout`, l'aggiornamento avviene automaticamente: questa volta viene eseguito l'hook (si nota il testo "Running post-checkout hook") e i sottomoduli vengono scaricati.
+![alt text](<Immagine 2025-01-11 213334.jpg>)
+
+**NOTA**: questo script ha però un effetto collaterale: viene eseguito ad ogni checkout, quindi se ci si sposta spesso tra commit o branch con sottomoduli diversi, potrebbe richiedere del tempo per completare l'aggiornamento di tutti i sottomoduli, specialmente se sono piuttosto grossi. Inoltre, anche il checkout di un singolo file da un altro commit (comando `git checkout <SHA> -- path/to/your/file`) triggera l'esecuzione dello script.  
+Da valutare quindi se vale la pena o meno inserirlo globalmente.
 
 ## merge
 **Problema**: quando si fa il merge in `main` (o altro branch) di un branch che è linkato ad una versione più recente di un submodule (supponiamo non ci siano conflitti tra le versioni del sottomodulo), git **non** aggiorna automaticamente il sottomodulo nel branch dove è stato fatto il merge, ma bisogna **sempre** dare il comando:  
 > `$ git submodule update --init --recursive` 
 
+Il problema è simile al [caso precedente](#nuovo-submodule-nel-repo-remoto), ma mentre prima avevamo a che fare con un **nuovo** sottomodulo, qui parliamo di un sottomodulo **già esistente** che, in un altro branch, è stato **aggiornato ad un commit più recente** (o semplicemente diverso).  
 Di default git non sposta il sottomodulo ma lo manitiene alla versione attuale, notificando però che è necessario un nuovo commit per riportare il sottomodulo alla versione attuale, in seguito al merge ([link](https://www.reddit.com/r/git/comments/170la7k/why_isnt_my_submodule_uptodate_after_a_merge/)).
 Una soluzione automatica è quella di usare un **post-merge hook** per risolvere il problema. [link](https://www.reddit.com/r/git/comments/170la7k/why_isnt_my_submodule_uptodate_after_a_merge/), [link](https://gist.github.com/ejmr/453edc19dd596e472e90)
 
