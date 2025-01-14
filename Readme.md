@@ -178,6 +178,14 @@ Info ai link: [istruzioni](https://coderwall.com/p/jp7d5q/create-a-global-git-co
 * infine, reinizializzare i repository già presenti in locale per i quali si vuole applicare questo hook, entrando nella cartella del repository ed eseguendo il comando:
   > `$ git init`
 
+**NOTA**: Questo comando reinizializza solo il repository principale, ma non i sottomoduli (lo si vede perchè nella cartella `.git/modules/<nome modulo>/hooks/` del repo principale, **non** è stato copiato il file di hook `post-merge`).  
+Per reinizializzare anche i sottomoduli, bisogna entrare nelle loro cartelle e, per ognuno, eseguire lo stesso comando precedente.  
+L'alternativa più veloce è farlo con il comando:  
+> `$ git submodule foreach --recursive 'git init'`
+
+Riassumendo, per fare tutto con un unico comando direttamente dalla cartella del repo principale:
+> `$ git init && git submodule foreach --recursive 'git init'`
+
 Se la procedura è stata eseguita correttamente, essendo un parametro globale, ogni nuovo repository che verrà clonato con `git clone` conterrà automaticamente lo script di hook `post-merge` senza bisogno di ulteriori comandi.
 
 #### esempio
