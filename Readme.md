@@ -13,6 +13,7 @@
       - [esempio](#esempio-1)
         - [senza Hook](#senza-hook)
         - [con hook](#con-hook)
+    - [nuovo branch](#nuovo-branch)
   - [rimuovere un sottomodulo:](#rimuovere-un-sottomodulo)
   - [note](#note)
 
@@ -267,6 +268,19 @@ if [ -x "$(git rev-parse --git-dir)/hooks/post-merge-local" ]; then
     "$(git rev-parse --git-dir)/hooks/post-merge-local"
 fi
 ```
+
+### nuovo branch
+Se esiste un nuovo branch remoto, con un nuovo sottomodulo, e facendo il chekout compare un errore del tipo:  
+> fatal: not a git repository: ../.git/modules/<submodule name>  
+> fatal: could not reset submodule index
+
+Provare a creare prima un branch locale con lo stesso nome
+> $ `git checkout -b <nome branch>`
+
+poi legarlo al branch remoto
+> $ `git branch -u origin/<nome branch>`
+
+e infine aggiornarlo con un `pull` (eventualmente con opzione `--recurse-submodule`).
 
 ## rimuovere un sottomodulo:
 Per [rimuovere completamente un sottomodulo](https://stackoverflow.com/questions/1260748/how-do-i-remove-a-submodule/36593218#36593218):
