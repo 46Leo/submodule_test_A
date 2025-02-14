@@ -75,7 +75,8 @@ Anche per il `checkout` tra commit e branch nel repository principale git **non*
 
 [link](https://www.vogella.com/tutorials/GitSubmodules/article.html)
 
-Oppure, per eseguire un `pull` o un `checkout` in modo che anche i submodules siano sincronizzati, aggiungere l'opzione **`--recurse-submodules`** al comando.
+Oppure, per eseguire un `pull` o un `checkout` in modo che anche i submodules siano sincronizzati, aggiungere l'opzione **`--recurse-submodules`** al comando:
+> `$ git pull origin <branch-name> --recurse-submodules`
 
 ## configurare git globalmente
 La soluzione (forse) migliore è [configurare Git globalmente]((https://stackoverflow.com/questions/1899792/why-is-git-submodule-not-updated-automatically-on-git-checkout)) in modo che l'update automatico dei sottomoduli sia il comportamento predefinito:
