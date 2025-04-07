@@ -143,7 +143,7 @@ L'hook sarà identico a quello per il merge, dovrà contenere solamente il coman
 Supponiamo di essere nella situazione iniziale seguente: vogliamo spostarci in un nuovo branch remoto (con nuovi sottomoduli).  
 ![alt text](<Immagine 2025-01-11 211854.jpg>)
 
-Facendo lo `switch` sul nuovo branch, troveremo in locale le cartelle dei nuovi sottomoduli ma saranno vuote. Dovremo aggiornare manualmente i nuovi repository.
+Facendo lo `switch` sul nuovo branch (attenzione, preferire `git switch` e non `git checkout`), troveremo in locale le cartelle dei nuovi sottomoduli ma saranno vuote. Dovremo aggiornare manualmente i nuovi repository.
 ![alt text](<Immagine 2025-01-11 212044.jpg>)
 
 ![alt text](<Immagine 2025-01-11 212448.jpg>)
