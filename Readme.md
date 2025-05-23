@@ -1,12 +1,13 @@
 # tutorial sottomoduli git
 
 - [tutorial sottomoduli git](#tutorial-sottomoduli-git)
-  - [gerartchia repo e submodules:](#gerartchia-repo-e-submodules)
+  - [gerarchia repo e submodules:](#gerarchia-repo-e-submodules)
   - [aggiungere sottomoduli](#aggiungere-sottomoduli)
     - [nota per visual studio](#nota-per-visual-studio)
   - [rimuovere un sottomodulo:](#rimuovere-un-sottomodulo)
   - [clonare repository che contengono sottomoduli](#clonare-repository-che-contengono-sottomoduli)
   - [checkout](#checkout)
+    - [nuovo branch](#nuovo-branch)
   - [configurare git globalmente](#configurare-git-globalmente)
     - [nuovo submodule nel repo remoto](#nuovo-submodule-nel-repo-remoto)
       - [esempio](#esempio)
@@ -15,12 +16,11 @@
       - [esempio](#esempio-1)
         - [senza Hook](#senza-hook)
         - [con hook](#con-hook)
-    - [nuovo branch](#nuovo-branch)
   - [suggerimenti](#suggerimenti)
   - [note](#note)
 
 
-## gerartchia repo e submodules:
+## gerarchia repo e submodules:
 Si usa la seguente gerarchia di sottomoduli per gli esempi seguenti.  
 ```
 A
@@ -107,6 +107,19 @@ Oppure, per eseguire un `pull` o un `checkout` in modo che anche i submodules si
 È anche possibile aggiornare i sottomoduli al commit più recente del branch remoto attualmente tracciato:
 > `$ git submodule update --remote`
 
+### nuovo branch
+Se esiste un nuovo branch remoto, con un nuovo sottomodulo, e facendo il chekout compare un errore del tipo:  
+> fatal: not a git repository: ../.git/modules/<submodule name>  
+> fatal: could not reset submodule index
+
+Provare a creare prima un branch locale con lo stesso nome
+> $ `git checkout -b <nome branch>`
+
+poi legarlo al branch remoto
+> $ `git branch -u origin/<nome branch>`
+
+e infine aggiornarlo con un `pull` (eventualmente con opzione `--recurse-submodule`).
+
 
 ## configurare git globalmente
 La soluzione (forse) migliore è [configurare Git globalmente]((https://stackoverflow.com/questions/1899792/why-is-git-submodule-not-updated-automatically-on-git-checkout)) in modo che l'update automatico dei sottomoduli sia il comportamento predefinito:
@@ -179,6 +192,7 @@ Se invece creiamo un nuovo script `post_checkout`, l'aggiornamento avviene autom
 **NOTA**: questo script ha però un effetto collaterale: viene eseguito ad **ogni checkout** e quindi, se ci si sposta spesso tra commit o branch con sottomoduli diversi, potrebbe richiedere del tempo per completare l'aggiornamento di tutti i sottomoduli, specialmente se sono piuttosto grossi.  
 Inoltre, anche il checkout di un singolo file da un altro commit (comando `git checkout <SHA> -- path/to/your/file`) triggera l'esecuzione dello script (viene pur sempre usato il comando `checkout`).  
 Da valutare quindi se vale la pena o meno inserirlo globalmente (probabilmente no).
+
 
 ## merge
 **Problema**: quando si fa il merge in `main` (o altro branch) di un branch che è linkato ad una versione più recente di un submodule (supponiamo non ci siano conflitti tra le versioni del sottomodulo), git **non** aggiorna automaticamente il sottomodulo nel branch dove è stato fatto il merge, ma bisogna **sempre** dare il comando:  
@@ -295,19 +309,6 @@ if [ -x "$(git rev-parse --git-dir)/hooks/post-merge-local" ]; then
     "$(git rev-parse --git-dir)/hooks/post-merge-local"
 fi
 ```
-
-### nuovo branch
-Se esiste un nuovo branch remoto, con un nuovo sottomodulo, e facendo il chekout compare un errore del tipo:  
-> fatal: not a git repository: ../.git/modules/<submodule name>  
-> fatal: could not reset submodule index
-
-Provare a creare prima un branch locale con lo stesso nome
-> $ `git checkout -b <nome branch>`
-
-poi legarlo al branch remoto
-> $ `git branch -u origin/<nome branch>`
-
-e infine aggiornarlo con un `pull` (eventualmente con opzione `--recurse-submodule`).
 
 
 ## suggerimenti
