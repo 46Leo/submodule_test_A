@@ -16,6 +16,7 @@
       - [esempio](#esempio-1)
         - [senza Hook](#senza-hook)
         - [con hook](#con-hook)
+    - [conflitti con sottomoduli](#conflitti-con-sottomoduli)
   - [suggerimenti](#suggerimenti)
   - [note](#note)
 
@@ -310,6 +311,15 @@ if [ -x "$(git rev-parse --git-dir)/hooks/post-merge-local" ]; then
 fi
 ```
 
+### conflitti con sottomoduli
+Se durante un merge ci sono conflitti tra sottomoduli e si vuole mantenere la versione del sottomodulo presente nel branch attuale, si può usare il comando:
+> `$ git reset HEAD path/to/submodule`
+
+Esempio del conflitto (prima):
+![alt text](<Screenshot 2025-09-18 143110.png>)
+
+e della soluzione (dopo):
+![alt text](<Screenshot 2025-09-18 143238.png>) 
 
 ## suggerimenti
 
