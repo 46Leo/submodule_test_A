@@ -195,7 +195,7 @@ Se invece creiamo un nuovo script `post_checkout`, l'aggiornamento avviene autom
 
 **NOTA**: questo script ha però un effetto collaterale: viene eseguito ad **ogni checkout** e quindi, se ci si sposta spesso tra commit o branch con sottomoduli diversi, potrebbe richiedere del tempo per completare l'aggiornamento di tutti i sottomoduli, specialmente se sono piuttosto grossi.  
 Inoltre, anche il checkout di un singolo file da un altro commit (comando `git checkout <SHA> -- path/to/your/file`) triggera l'esecuzione dello script (viene pur sempre usato il comando `checkout`).  
-Da valutare quindi se vale la pena o meno inserirlo globalmente (probabilmente no).
+Da valutare quindi se vale la pena o meno inserirlo globalmente (probabilmente **no**).
 
 
 ## merge
