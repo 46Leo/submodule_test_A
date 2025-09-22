@@ -37,6 +37,9 @@ A
 Per aggiungere un sottomodulo ad un repository git, è sufficiente posizionarsi nella cartella dove si vuole inserire il repository (sottomodulo) e usare il comando: 
 > `$ git submodule add <URL>`
 
+Inoltre, se il sottomodulo a sua volta contiene altri sottomoduli, questi andranno esplicitamente scaricati con:
+> `$ git submodule update --init --recursive`
+
 (Tutorial e info aggiuntive [qui](https://git-scm.com/book/it/v2/Git-Tools-Submodules) e [qui](https://www.atlassian.com/it/git/tutorials/git-submodule)).
 
 **ATTENZIONE**: quando si clona un repo contenente sottomoduli, questi vengono scaricati in modalità [_detached HEAD_](https://github.com/gitextensions/gitextensions/issues/10794): nel tempo, il repo del sottomodulo potrebbe avanzare.   
