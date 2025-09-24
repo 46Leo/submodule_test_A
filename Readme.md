@@ -6,6 +6,7 @@
     - [nota per visual studio](#nota-per-visual-studio)
   - [rimuovere un sottomodulo:](#rimuovere-un-sottomodulo)
   - [clonare repository che contengono sottomoduli](#clonare-repository-che-contengono-sottomoduli)
+  - [pull](#pull)
   - [checkout](#checkout)
     - [nuovo branch](#nuovo-branch)
   - [configurare git globalmente](#configurare-git-globalmente)
@@ -97,6 +98,15 @@ Di default, però, `git clone` **NON** scarica i sottomoduli!
 Per scarica automaticamente tutti i sottomoduli in maniera ricorsiva è **sempre** necessario aggiungere l'opzione **`--recurse-submodules`** al comando di clone, anche se sono globalmente impostati i parametri `submodule.recurse` e `submodule.stickyRecursiveClone` ([info](https://stackoverflow.com/questions/70249838/git-setting-submodule-recurse-is-not-working-git-bash)).  
 
 > `$ git clone <URL> --recurse-submodules`
+
+## pull
+In caso di errori in fase di pulling (o altra), con messaggio del tipo:
+> `! [rejected] ... (would clobber existing tag)`
+
+provare ad entrare nel sottomodulo e dare il comando:
+> `$git fetch --tags --force`
+
+poi, riprovare il pull.
 
 
 ## checkout
